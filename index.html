@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Presente secreto ❤️</title>
+<style>
+  :root{
+    --bg-1:#fce7f0; --bg-2:#f8d7ea; --glass:rgba(255,192,203,.15); --stroke:rgba(255,255,255,.3);
+    --muted:#b85884; --text:#2c1420; --accent:#ff69b4; --accent-2:#ff1493;
+    --ok:#ff69b4; --warn:#ff91a4; --err:#ff4757; --shadow:0 18px 60px rgba(255,105,180,.25);
+    --radius:20px;
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{
+    margin:0; color:var(--text); overflow-x:hidden;
+    font:400 16px/1.55 'Segoe UI',system-ui,-apple-system,Roboto,"Helvetica Neue",Arial;
+    background:
+      radial-gradient(1200px 800px at 15% 5%, rgba(255,182,193,.4) 0%, transparent 60%),
+      radial-gradient(900px 700px at 90% 100%, rgba(255,105,180,.3) 0%, transparent 55%),
+      linear-gradient(135deg, #fce7f0, #f8d7ea, #ffb6c1, #ffc0cb);
+    display:flex; align-items:center; justify-content:center; padding:30px 18px;
+    position:relative;
+  }
+  a{color:inherit; text-decoration:none}
+  h1,h2,h3{margin:0 0 .5rem}
+  h1{font-weight:800; letter-spacing:.3px;
+    background:linear-gradient(90deg,#ff1493,#ff69b4,#ffb6c1,#ffc0cb);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow: 0 2px 4px rgba(255,105,180,0.3);} 
+  h2{font-weight:700}
+  .floating-hearts { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+  .floating-heart { position: absolute; color: rgba(255, 105, 180, 0.4); font-size: 50px; animation: gentleFloat 15s ease-in-out infinite; }
+  .floating-heart:nth-child(1) { left: 10%; animation-delay: 0s;  font-size: 16px; color: rgba(255, 182, 193, 0.5); }
+  .floating-heart:nth-child(2) { left: 25%; animation-delay: 3s;  font-size: 20px; color: rgba(255, 105, 180, 0.4); }
+  .floating-heart:nth-child(3) { left: 45%; animation-delay: 6s;  font-size: 14px; color: rgba(255, 192, 203, 0.6); }
+  .floating-heart:nth-child(4) { left: 65%; animation-delay: 9s;  font-size: 18px; color: rgba(255, 20, 147, 0.3); }
+  .floating-heart:nth-child(5) { left: 80%; animation-delay: 12s; font-size: 22px; color: rgba(255, 182, 193, 0.4); }
+  .floating-heart:nth-child(6) { left: 35%; animation-delay: 2s;  font-size: 16px; color: rgba(255, 105, 180, 0.5); }
+  @keyframes gentleFloat {
+    0%   { transform: translateY(100vh) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 1; }
+    50%  { opacity: 1; transform: translateY(50vh) rotate(180deg); }
+    90%  { opacity: 0.3; }
+    100% { transform: translateY(-20px) rotate(360deg); opacity: 0; }
+  }
+  .wrap{
+    width:min(980px, 96vw); border-radius:var(--radius);
+    background:linear-gradient(135deg, rgba(255,255,255,.3), rgba(255,255,255,.1));
+    border:2px solid var(--stroke); box-shadow:var(--shadow);
+    padding:22px; backdrop-filter: blur(15px); animation: pop .5s ease-out;
+    position: relative; z-index: 10;
+  }
+  @keyframes pop {from{transform:translateY(10px) scale(.98); opacity:0} to{transform:translateY(0) scale(1); opacity:1}}
+  .row{display:flex; gap:18px; align-items:stretch; flex-wrap:wrap}
+  .card{
+    flex:1 1 360px; background:linear-gradient(135deg, rgba(255,255,255,.4), rgba(255,182,193,.2));
+    border:2px solid var(--stroke); border-radius:18px; padding:20px; position:relative; overflow:hidden;
+    box-shadow: 0 8px 32px rgba(255,105,180,.15);
+  }
+  .card::after{
+    content:""; position:absolute; inset:-2px; border-radius:18px; pointer-events:none;
+    background: radial-gradient(400px 140px at -10% -10%, rgba(255,255,255,.2), transparent 40%),
+                radial-gradient(300px 120px at 110% 110%, rgba(255,182,193,.15), transparent 35%);
+    mix-blend-mode:overlay;
+  }
+  .small{color:var(--muted)} .status{color:var(--muted); margin-top:8px}
+  .deny{color:var(--err); font-weight:700; margin-top:8px}
+  label{display:block; margin-bottom:6px; color:#cfd8ea; font-weight:600}
+  input[type=text], textarea, select{
+    width:100%; color:var(--text); background:rgba(255,255,255,.6);
+    border:2px solid rgba(255,182,193,.5); border-radius:15px; padding:12px 13px;
+    outline:none; transition:.2s border,.2s box-shadow,.2s transform;
+  }
+  textarea{resize:vertical; min-height:160px}
+  input:focus, textarea:focus, select:focus{
+    border-color:rgba(255,105,180,.8);
+    box-shadow:0 0 0 6px rgba(255,105,180,.15), 0 6px 20px rgba(255,105,180,.25);
+    transform: translateY(-1px);
+  }
+  button{
+    appearance:none; border:0; cursor:pointer; padding:12px 18px; border-radius:15px;
+    font-weight:700; letter-spacing:.2px; color:white; 
+    background:linear-gradient(135deg, #ff69b4, #ff1493);
+    transition: transform .12s ease, box-shadow .2s ease, filter .2s ease;
+    box-shadow: 0 6px 20px rgba(255,105,180,.4);
+  }
+  button:hover{transform:translateY(-2px); filter:brightness(1.1); box-shadow: 0 8px 25px rgba(255,105,180,.5);} 
+  button:active{transform:translateY(0) scale(.98)}
+  .btn-ghost{background:rgba(255,255,255,.3); color:var(--text); border:2px solid rgba(255,105,180,.4); box-shadow:0 4px 15px rgba(255,105,180,.2);} 
+  #openChessBtn > button{ background:linear-gradient(135deg,#2aa84f,#3cd172); color:white; box-shadow:0 10px 26px rgba(42,168,79,.35) }
+  .video-box{position:relative; width:100%; border-radius:12px; overflow:hidden; border:1px solid var(--stroke);
+    background:#090f1a; padding-top:56.25%; box-shadow:var(--shadow)}
+  .video-box iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
+  .letter{white-space:pre-wrap; font:500 17px/1.7 Georgia,"Times New Roman",serif; color:#2b1f1a; text-shadow:0 1px 0 rgba(255,255,255,.35)}
+  .letter-envelope { position: relative; cursor: pointer; transition: all 0.4s ease; transform-style: preserve-3d; }
+  .letter-envelope:hover { transform: scale(1.02) rotateY(2deg); filter: brightness(1.02); }
+  #step4:not(.hidden) {
+    position: fixed !important;
+    top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important;
+    transform: none !important; z-index: 1000 !important;
+    background: rgba(252, 231, 240, 0.65) !important;
+    backdrop-filter: blur(6px);
+    padding: 0 !important; margin: 0 !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+  }
+  .envelope-front { position: relative; width: 320px; height: 200px; background: linear-gradient(145deg, #f5f0e8, #ede4d3, #e8dcc8); border-radius: 4px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+  .envelope-front:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2), 0 6px 15px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+  .envelope-flap { position: absolute; top: 0; left: 0; right: 0; height: 0; border-left: 160px solid transparent; border-right: 160px solid transparent; border-top: 100px solid #f0e6d2; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+  .envelope-front::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 49%, rgba(0,0,0,0.05) 50%, transparent 51%), linear-gradient(-135deg, transparent 49%, rgba(0,0,0,0.05) 50%, transparent 51%); pointer-events: none; }
+  .click-hint { text-align: center; color: #8b755d; font-style: italic; margin-top: 15px; opacity: 0.9; font-size: 14px; animation: gentlePulse 3s infinite; transition: opacity 0.5s ease; }
+  @keyframes gentlePulse { 0%, 100% { opacity: 0.7; transform: translateY(0px); } 50% { opacity: 1; transform: translateY(-2px); } }
+  .letter-content { opacity: 0; transform: translateY(30px) scale(0.9); transition: all 1s cubic-bezier(0.23, 1, 0.32, 1) 0.8s; background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(252, 248, 240, 0.9)); padding: 25px; border-radius: 8px; box-shadow: 0 6px 20px rgba(139, 117, 93, 0.25); margin-top: 20px; border: 1px solid rgba(196, 165, 114, 0.3); max-width: 750px; max-height: 70vh; overflow-y: auto; }
+  .letter-opened .envelope-front { background: linear-gradient(135deg, #f8f1de, #f2e5c8, #ede0c4); transform: translateY(-15px) scale(1.02); box-shadow: 0 15px 40px rgba(139, 117, 93, 0.25), inset 0 3px 8px rgba(255,255,255,0.4); }
+  .letter-opened .letter-content { opacity: 1; transform: translateY(0) scale(1); }
+  .letter-closing .letter-content { opacity: 0; transform: translateY(20px) scale(0.95); transition: all 0.8s cubic-bezier(0.55, 0.085, 0.68, 0.53); }
+  .letter-closing .envelope-front { transform: translateY(0) scale(1); background: linear-gradient(135deg, #f4e4c1, #e8d5b7, #dcc8a8); transition: all 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) 0.3s; }
+  .letter-to-footer { animation: flyToFooter 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; z-index: 1000; pointer-events: none; }
+  @keyframes flyToFooter {
+    0% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; }
+    30%{ transform: scale(0.8) translateY(-50px) rotate(-10deg); opacity: 0.8; }
+    70%{ transform: scale(0.4) translateY(calc(100vh - 200px)) translateX(200px) rotate(-25deg); opacity: 0.6; }
+    100%{ transform: scale(0.1) translateY(calc(100vh - 100px)) translateX(300px) rotate(-45deg); opacity: 0; }
+  }
+  .footer-letter { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 40px; background: linear-gradient(135deg, #f4e4c1, #e8d5b7); border: 1px solid #c5a572; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 12px rgba(139, 117, 93, 0.3); transition: all 0.3s ease; z-index: 100; animation: slideInFromRight 1s cubic-bezier(0.23, 1, 0.32, 1); }
+  .footer-letter:hover { transform: scale(1.1) rotate(5deg); box-shadow: 0 6px 20px rgba(139, 117, 93, 0.4); }
+  @keyframes slideInFromRight { from { transform: translateX(100px) rotate(45deg); opacity: 0; } to { transform: translateX(0) rotate(0deg); opacity: 1; } }
+  .hidden{display:none}
+  @media (max-width: 720px){ body{padding:20px 12px} .wrap{padding:16px} .card{padding:14px} h1{font-size:1.4rem} h2{font-size:1.1rem} }
+  #step4:not(.hidden) {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 1000 !important;
+    background: rgba(252,231,240,0.65) !important;
+    backdrop-filter: blur(6px);
+    display: grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  #step4 .letter-envelope {
+    position: fixed !important;
+    left: 50% !important;
+    top: 18% !important;
+    transform: translate(-50%, -50%) !important;
+    transform-origin: center center !important;
+    margin: 0 !important;
+    z-index: 1001 !important;
+  }
+  #step4 .letter-envelope:hover {
+    transform: translate(-50%, -50%) scale(1.02) rotateY(2deg) !important;
+  }
+  #step4 .click-hint {
+    position: fixed !important;
+    left: 50% !important;
+    top: calc(18% + 120px) !important;
+    transform: translateX(-50%) !important;
+    margin: 0 !important;
+  }
+  #step4 .letter-content {
+    position: fixed !important;
+    left: 50% !important;
+    top: calc(18% + 140px) !important;
+    transform: translate(-50%, 30px) scale(0.9) !important;
+    opacity: 0;
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1) 0.2s;
+    max-width: 700px !important;
+    width: 100vw !important;
+    padding: 28px 32px !important;
+    box-sizing: border-box !important;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  #step4 .letter-opened .letter-content.centered {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1) !important;
+  }
+  #step4 .letter-envelope.centered {
+    position: fixed !important;
+    left: 50% !important;
+    top: 18% !important;
+    transform: translate(-50%, -50%) !important;
+    transform-origin: center center !important;
+    margin: 0 !important;
+    z-index: 1001 !important;
+  }
+  #step4 .letter-envelope.centered:hover {
+    transform: translate(-50%, -50%) scale(1.02) rotateY(2deg) !important;
+  }
+  #step4 .click-hint.centered {
+    position: fixed !important;
+    left: 50% !important;
+    top: calc(45% + 120px) !important;
+    transform: translateX(-50%) !important;
+    margin: 0 !important;
+  }
+  #step4 .letter-content.centered {
+    position: fixed !important;
+    left: 50% !important;
+    top: calc(45% + 140px) !important;
+    transform: translate(-50%, 30px) scale(0.9) !important;
+    opacity: 0;
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1) 0.2s;
+    max-width: 700px !important;
+    width: 100vw !important;
+    padding: 28px 32px !important;
+    box-sizing: border-box !important;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  #step4 .letter-opened .letter-content.centered {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1) !important;
+  }
+</style>
+</head>
+<body>
+  <div class="floating-hearts">
+    <div class="floating-heart">♥</div>
+    <div class="floating-heart">♥</div>
+    <div class="floating-heart">♥</div>
+    <div class="floating-heart">♥</div>
+    <div class="floating-heart">♥</div>
+    <div class="floating-heart">♥</div>
+  </div>
+  <div class="wrap" id="app">
+    <h1>Presente secreto</h1>
+    <p class="small" id="initialMessage">Digite seu nome completo para acessar (só funciona com o nome exato).</p>
+    <div class="row">
+      <div class="card" id="step1">
+        <label for="name">Nome completo</label>
+        <input id="name" type="text" placeholder="Digite o nome completo..." autocomplete="off" />
+        <div style="margin-top:10px;">
+          <button id="checkBtn">Entrar</button>
+        </div>
+        <div id="denied" class="deny hidden">Acesso negado ao meu coração 💔</div>
+      </div>
+      <div class="card hidden" id="step2">
+        <h2>Jogue uma partida (no chess.com)</h2>
+        <p class="small">Clique para abrir o chess.com em nova aba e jogar contra o bot. Depois, copie o PGN do jogo e cole aqui para validar a vitória.</p>
+        <div style="display:flex; gap:12px; align-items:center; margin-bottom:10px;">
+          <a id="openChessBtn" href="https://www.chess.com/play/computer" target="_blank" rel="noopener noreferrer">
+            <button>Abrir chess.com (Jogar vs bot)</button>
+          </a>
+          <small class="small">Abre em nova aba. Jogue com as configurações que preferir.</small>
+        </div>
+        <div style="margin-top:12px;">
+          <label for="pgnArea">Cole aqui o PGN do jogo:</label>
+          <textarea id="pgnArea" rows="8" placeholder="Cole o PGN do jogo aqui..."></textarea>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button id="checkPgnBtn">Validar PGN e liberar presente</button>
+            <button id="helpPgnBtn" class="btn-ghost">Como pegar o PGN?</button>
+          </div>
+          <div id="pgnMsg" class="status" style="margin-top:8px">Aguardando PGN...</div>
+        </div>
+      </div>
+    </div>
+    <div class="card hidden" id="step3">
+      <h2>Parabéns, você venceu! 🎉</h2>
+      <p class="small">Assista ao vídeo abaixo.</p>
+      <div class="video-box">
+        <iframe id="giftVideo" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+      <div style="margin-top:12px;">
+        <button id="skipToLetter" class="btn-ghost">Ir direto para a carta</button>
+      </div>
+    </div>
+  </div>
+  <div class="hidden" id="step4">
+    <div class="letter-envelope" id="letterEnvelope">
+      <div class="envelope-front">
+        <div class="envelope-flap"></div>
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #8b755d; font-family: 'Georgia', serif;">
+          <p style="margin: 0; font-size: 16px; font-weight: 600;">Para:</p>
+          <p style="margin: 5px 0; font-size: 20px; font-weight: 700; color: #6d4c2f;">Lavínia ❤️</p>
+          <p style="margin: 10px 0 0; font-size: 12px; opacity: 0.8; font-style: italic;">De: Leo com amor 💕</p>
+        </div>
+        <div style="position: absolute; top: 15px; right: 15px; width: 50px; height: 35px; background: linear-gradient(135deg, #ff69b4, #ff1493); border: 1px solid #fff; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transform: rotate(3deg);">💌</div>
+      </div>
+      <div class="click-hint"></div>
+      <div class="letter-content">
+        <div class="letter" id="letterText"></div>
+        <footer style="margin-top: 20px; text-align: right; color: #8b755d; font-style: italic; border-top: 1px solid rgba(139, 117, 93, 0.3); padding-top: 15px;">
+          Com todo meu amor ❤️<br>
+          <strong style="font-size: 18px;">Leo</strong>
+        </footer>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/1.0.0/chess.min.js"></script>
+  <script>
+const CORRECT_NAME = "Lavinia Machado Cardoso Mota";
+const VIDEO_EMBED  = "https://www.youtube.com/embed/SEU_VIDEO_ID?rel=0&autoplay=1";
+const LETTER_TEXT  = `Meu amor,
+
+Para finalizar este presente, eu queria dizer que você é a pessoa com quem quero compartilhar cada segundo da minha vida. Quero estar ao seu lado para enxugar suas lágrimas de tristeza, para rir até a barriga pedir arrego, para conversar, para discutir e até para ficar em silêncio. Em resumo: para o vazio que eu buscava preencher, você virou meu tudo. Serei para sempre grato por ter você em minha vida. Quero que você saiba que, a cada batida do meu coração, meu amor por você apenas aumenta e, no que depender de mim, farei o que for preciso para continuar com esse privilégio de poder amar você. Amo você hoje, amanhã e sempre.
+
+Com amor,
+Leo`;
+const step1 = document.getElementById('step1');
+const step2 = document.getElementById('step2');
+const step3 = document.getElementById('step3');
+const step4 = document.getElementById('step4');
+const denied = document.getElementById('denied');
+const checkBtn = document.getElementById('checkBtn');
+const nameInput = document.getElementById('name');
+const pgnArea = document.getElementById('pgnArea');
+const checkPgnBtn = document.getElementById('checkPgnBtn');
+const pgnMsg = document.getElementById('pgnMsg');
+const helpPgnBtn = document.getElementById('helpPgnBtn');
+const giftVideo = document.getElementById('giftVideo');
+const skipToLetterBtn = document.getElementById('skipToLetter');
+const initialMessage = document.getElementById('initialMessage');
+document.getElementById('letterText').textContent = LETTER_TEXT;
+function normalizeText(text) {
+  return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+function checkName() {
+  const val = nameInput.value.trim();
+  const normalizedInput = normalizeText(val);
+  const normalizedCorrectName = normalizeText(CORRECT_NAME);
+  if (normalizedInput === normalizedCorrectName) {
+    denied.classList.add('hidden');
+    step1.classList.add('hidden');
+    step2.classList.remove('hidden');
+    initialMessage.classList.add('hidden');
+  } else {
+    denied.classList.remove('hidden');
+  }
+}
+checkBtn.addEventListener('click', checkName);
+nameInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkName(); });
+helpPgnBtn.addEventListener('click', () => {
+  alert("No chess.com: abra o jogo que você acabou de jogar → clique no menu (três pontinhos) ou no ícone de download → 'Download PGN' ou 'Copy PGN'. Cole aqui o texto do PGN.");
+});
+function checkPgnAndReveal(pgnText) {
+  pgnMsg.textContent = 'Validando PGN...';
+  try {
+    if (!pgnText || pgnText.trim().length < 50) { pgnMsg.textContent = 'PGN muito curto ou vazio. Cole o PGN completo.'; return; }
+    let result = null;
+    const resultMatch = pgnText.match(/\[Result\s+["']([^"']+)["']\]/i);
+    if (resultMatch) result = resultMatch[1].trim();
+    if (!result) {
+      const endMatch = pgnText.match(/(1-0|0-1|1\/2-1\/2)\s*$/m);
+      if (endMatch) result = endMatch[1];
+    }
+    if (!result) {
+      const anyMatch = pgnText.match(/(1-0|0-1|1\/2-1\/2)/);
+      if (anyMatch) result = anyMatch[1];
+    }
+    if (!result) { pgnMsg.textContent = 'Não encontrei o resultado da partida (1-0, 0-1, 1/2-1/2). Partida foi finalizada?'; return; }
+    if (result === '1/2-1/2') { pgnMsg.textContent = 'Empate detectado! Não libera o presente. Jogue novamente e vença! ❤️'; return; }
+    const whiteMatch = pgnText.match(/\[White\s+["']([^"']*)["']\]/i);
+    const blackMatch = pgnText.match(/\[Black\s+["']([^"']*)["']\]/i);
+    const whiteName = whiteMatch ? whiteMatch[1].trim() : '?';
+    const blackName = blackMatch ? blackMatch[1].trim() : '?';
+    let laviniaColor = null; const normalizedCorrect = normalizeText(CORRECT_NAME);
+    if (normalizeText(whiteName) === normalizedCorrect) laviniaColor = 'white';
+    else if (normalizeText(blackName) === normalizedCorrect) laviniaColor = 'black';
+    if (!laviniaColor) {
+      const isWhite = confirm(`Não consegui identificar automaticamente sua cor no PGN.\n\nJogadores encontrados:\nBrancas: "${whiteName}"\nPretas: "${blackName}"\n\nVocê jogou de BRANCAS?\n(Clique OK para Brancas, Cancelar para Pretas)`);
+      laviniaColor = isWhite ? 'white' : 'black';
+    }
+    const winner = (result === '1-0') ? 'white' : 'black';
+    if (winner === laviniaColor) {
+      pgnMsg.textContent = `🎉 PARABÉNS! Você venceu (${result})! Liberando o presente...`;
+      setTimeout(() => {
+        step2.classList.add('hidden');
+        step3.classList.remove('hidden');
+        giftVideo.src = VIDEO_EMBED;
+      }, 800);
+    } else {
+      pgnMsg.textContent = `Você perdeu desta vez (${result}). Tente novamente e me envie quando vencer! 😊❤️`;
+    }
+  } catch (error) {
+    console.error('ERRO no validador:', error);
+    pgnMsg.textContent = `Erro: ${error.message}. Verifique o PGN e tente novamente.`;
+  }
+}
+checkPgnBtn.addEventListener('click', () => { const pgn = pgnArea.value.trim(); if (!pgn) { pgnMsg.textContent = 'Cole o PGN aqui primeiro.'; return; } checkPgnAndReveal(pgn); });
+skipToLetterBtn.addEventListener('click', () => {
+  step4.classList.remove('hidden');
+  letterEnvelope.classList.add('centered');
+  document.querySelector('#step4 .click-hint').classList.add('centered');
+  document.querySelector('#step4 .letter-content').classList.add('centered');
+});
+step4.addEventListener('transitionend', () => {
+  if (!step4.classList.contains('hidden')) {
+    letterEnvelope.classList.add('centered');
+    document.querySelector('#step4 .click-hint').classList.add('centered');
+    document.querySelector('#step4 .letter-content').classList.add('centered');
+  }
+});
+const letterEnvelope = document.getElementById('letterEnvelope');
+let letterState = 'closed';
+function openLetter() {
+  letterState = 'opening';
+  letterEnvelope.classList.add('letter-opened', 'centered');
+  document.querySelector('#step4 .click-hint').classList.add('centered');
+  document.querySelector('#step4 .letter-content').classList.add('centered');
+  letterEnvelope.classList.remove('letter-closing');
+  setTimeout(() => { letterState = 'opened'; }, 2000);
+}
+function closeLetter() {
+  letterState = 'closing';
+  letterEnvelope.classList.add('letter-closing');
+  letterEnvelope.classList.remove('letter-opened');
+  setTimeout(() => {
+    letterEnvelope.classList.add('letter-to-footer');
+    setTimeout(() => {
+      letterState = 'closed';
+      resetToBeginning();
+    }, 2500);
+  }, 2000);
+}
+function resetToBeginning() {
+  step1.classList.remove('hidden');
+  step2.classList.add('hidden');
+  step3.classList.add('hidden');
+  step4.classList.add('hidden');
+  initialMessage.classList.remove('hidden');
+  nameInput.value = ''; pgnArea.value = ''; pgnMsg.textContent = 'Aguardando PGN...'; denied.classList.add('hidden');
+  if (giftVideo.src) giftVideo.src = '';
+  resetLetterToInitialState();
+}
+function resetLetterToInitialState() {
+  letterEnvelope.classList.remove('letter-opened', 'letter-closing', 'letter-to-footer', 'centered');
+  letterState = 'closed';
+  const existingFooterLetter = document.querySelector('.footer-letter');
+  if (existingFooterLetter) existingFooterLetter.remove();
+}
+function addFooterLetter() {
+  const existingFooterLetter = document.querySelector('.footer-letter');
+  if (existingFooterLetter) existingFooterLetter.remove();
+  const footerLetter = document.createElement('div');
+  footerLetter.className = 'footer-letter';
+  footerLetter.innerHTML = '💌';
+  footerLetter.title = 'Clique para voltar ao início';
+  footerLetter.addEventListener('click', function() { this.remove(); resetToBeginning(); });
+  document.body.appendChild(footerLetter);
+}
+letterEnvelope.addEventListener('click', function() {
+  if (letterState === 'opening' || letterState === 'closing') return;
+  if (letterState === 'closed') openLetter(); else if (letterState === 'opened') closeLetter();
+});
+</script>
+</body>
+</html>
