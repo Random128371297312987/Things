@@ -404,19 +404,26 @@ function checkPgnAndReveal(pgnText) {
     if (normalizeText(whiteName) === normalizedCorrect) laviniaColor = 'white';
     else if (normalizeText(blackName) === normalizedCorrect) laviniaColor = 'black';
     if (!laviniaColor) {
-      const isWhite = confirm(`Não consegui identificar automaticamente sua cor no PGN.\n\nJogadores encontrados:\nBrancas: "${whiteName}"\nPretas: "${blackName}"\n\nVocê jogou de BRANCAS?\n(Clique OK para Brancas, Cancelar para Pretas)`);
-      laviniaColor = isWhite ? 'white' : 'black';
-    }
-    const winner = (result === '1-0') ? 'white' : 'black';
-    if (winner === laviniaColor) {
-      pgnMsg.textContent = `🎉 PARABÉNS! Você venceu (${result})! Liberando o presente...`;
-      setTimeout(() => {
-        step2.classList.add('hidden');
-        step3.classList.remove('hidden');
-        giftVideo.src = VIDEO_EMBED;
-      }, 800);
+      askColorMobile(whiteName, blackName, function(color) {
+        laviniaColor = color;
+        continueCheck();
+      });
+      return; // aguarda escolha
     } else {
-      pgnMsg.textContent = `Você perdeu desta vez (${result}). Tente novamente e me envie quando vencer! 😊❤️`;
+      continueCheck();
+    }
+    function continueCheck() {
+      const winner = (result === '1-0') ? 'white' : 'black';
+      if (winner === laviniaColor) {
+        pgnMsg.textContent = `🎉 PARABÉNS! Você venceu (${result})! Liberando o presente...`;
+        setTimeout(() => {
+          step2.classList.add('hidden');
+          step3.classList.remove('hidden');
+          giftVideo.src = VIDEO_EMBED;
+        }, 800);
+      } else {
+        pgnMsg.textContent = `Você perdeu desta vez (${result}). Tente novamente e me envie quando vencer! 😊❤️`;
+      }
     }
   } catch (error) {
     console.error('ERRO no validador:', error);
