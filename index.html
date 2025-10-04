@@ -212,6 +212,46 @@
     opacity: 1;
     transform: translate(-50%, 0) scale(1) !important;
   }
+  #colorModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+  }
+  #colorModal > div {
+    background: white;
+    border-radius: 14px;
+    padding: 32px 24px;
+    max-width: 320px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    text-align: center;
+  }
+  #colorModalText {
+    margin-bottom: 18px;
+    font-size: 1.1rem;
+    color: #8b755d;
+  }
+  #btnWhite {
+    margin: 8px 0 0 0;
+    padding: 12px 24px;
+    border-radius: 8px;
+    background: #ff69b4;
+    color: white;
+    font-weight: 700;
+    border: 0;
+  }
+  #btnBlack {
+    margin: 8px 0 0 12px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    background: #6d4c2f;
+    color: white;
+    font-weight: 700;
+    border: 0;
+  }
 </style>
 </head>
 <body>
@@ -285,6 +325,13 @@
           <strong style="font-size: 18px;">Leo</strong>
         </footer>
       </div>
+    </div>
+  </div>
+  <div id="colorModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:2000; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:14px; padding:32px 24px; max-width:320px; box-shadow:0 8px 32px rgba(0,0,0,0.18); text-align:center;">
+      <div id="colorModalText" style="margin-bottom:18px; font-size:1.1rem; color:#8b755d;"></div>
+      <button id="btnWhite" style="margin:8px 0 0 0; padding:12px 24px; border-radius:8px; background:#ff69b4; color:white; font-weight:700; border:0;">Joguei de Brancas</button>
+      <button id="btnBlack" style="margin:8px 0 0 12px; padding:12px 24px; border-radius:8px; background:#6d4c2f; color:white; font-weight:700; border:0;">Joguei de Pretas</button>
     </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/1.0.0/chess.min.js"></script>
@@ -442,6 +489,24 @@ letterEnvelope.addEventListener('click', function() {
   if (letterState === 'opening' || letterState === 'closing') return;
   if (letterState === 'closed') openLetter(); else if (letterState === 'opened') closeLetter();
 });
-</script>
+function askColorMobile(whiteName, blackName, callback) {
+  const modal = document.getElementById('colorModal');
+  const text = document.getElementById('colorModalText');
+  modal.style.display = 'flex';
+  text.innerHTML = `Não consegui identificar automaticamente sua cor no PGN.<br><br>
+    Jogadores encontrados:<br>
+    <strong>Brancas:</strong> "${whiteName}"<br>
+    <strong>Pretas:</strong> "${blackName}"<br><br>
+    Qual cor você jogou?`;
+  document.getElementById('btnWhite').onclick = function() {
+    modal.style.display = 'none';
+    callback('white');
+  };
+  document.getElementById('btnBlack').onclick = function() {
+    modal.style.display = 'none';
+    callback('black');
+  };
+}
+  </script>
 </body>
 </html>
